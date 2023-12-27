@@ -6,13 +6,13 @@ import ReactFlow, {
   applyEdgeChanges,
   addEdge,
 } from 'reactflow';
+import { nodeTypes } from "./Nodes";
 
 import saveAs from 'file-saver';
 import 'reactflow/dist/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const initialEdges = [{ id: '1-2', source: '1', target: '2' }];
-
 const initialNodes = [
   {
     id: '1',
@@ -22,8 +22,9 @@ const initialNodes = [
   },
   {
     id: '2',
-    data: { label: 'World' },
+    data: { label: 'initial value' },
     position: { x: 100, y: 100 },
+    type: 'textUpdater',
   },
 ];
 
@@ -89,13 +90,14 @@ function FlowChart() {
           edges={edges}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          nodeTypes={nodeTypes}
           fitView
         >
           <Background />
           <Controls />
         </ReactFlow>
       </div>
-      <button type="button" class="btn btn-primary" onClick={() => handleSave(nodes, edges)}>Save</button>
+      <button type="button" className="btn btn-primary" onClick={() => handleSave(nodes, edges)}>Save</button>
     </>
   );
 }
