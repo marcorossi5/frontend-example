@@ -1,5 +1,7 @@
 import ReactFlow, { Controls, Background } from 'reactflow';
+import saveAs from 'file-saver';
 import 'reactflow/dist/style.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const edges = [{ id: '1-2', source: '1', target: '2' }];
 
@@ -17,8 +19,22 @@ const nodes = [
   },
 ];
 
-const saveHandler = () => {
-  console.log("Saving to json")
+const saveAsJson = (toSave, fileName) => {
+  const blob = new Blob([JSON.stringify(toSave, null, 2)], { type: 'application/json' });
+  saveAs(blob, fileName);
+};
+
+const handleSave = () => {
+  const graphNodes = {
+    elements: nodes,
+  };
+  saveAsJson(graphNodes, "graphNodes.json")
+
+  const graphEdges = {
+    elements: edges,
+  };
+  saveAsJson(graphEdges, "graphEdges.json")
+  
 };
 
 function FlowChart() {
@@ -35,7 +51,7 @@ function FlowChart() {
           <Controls />
         </ReactFlow>
       </div>
-      <button type="button" onClick={saveHandler}>Save</button>
+      <button type="button" class="btn btn-primary" onClick={handleSave}>Save</button>
     </>
   );
 }
