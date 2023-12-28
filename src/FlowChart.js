@@ -22,10 +22,16 @@ const initialNodes = [
   },
   {
     id: '2',
-    data: { label: 'initial value' },
+    data: { label: 'World' },
     position: { x: 100, y: 100 },
-    type: 'textUpdater',
+    type: 'output',
   },
+  // {
+  //   id: '2',
+  //   data: { label: 'initial value' },
+  //   position: { x: 100, y: 100 },
+  //   type: 'textUpdater',
+  // },
 ];
 
 const saveAsJson = (toSave, fileName) => {
@@ -46,21 +52,40 @@ const showInNewTab = (toSave, fileName) => {
 const handleSave = (nodes, edges) => {
   const graphNodes = {
     nodes: nodes,
+    edges: edges
   };
-  // saveAsJson(graphNodes, "graphNodes.json")
+  // saveAsJson(graphNodes, "graph.json")
   showInNewTab(graphNodes)
-
-  const graphEdges = {
-    edges: edges,
-  };
-  // saveAsJson(graphEdges, "graphEdges.json")
-  showInNewTab(graphEdges)
-  
 };
 
 function FlowChart() {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
+
+  const handleLoad = () => {
+    const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = '.json';
+      fileInput.addEventListener('change', (event) => handleFileChange(event));
+      fileInput.click();
+  };
+  
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const loadedGraph = JSON.parse(e.target.result);
+          setNodes(loadedGraph.nodes);
+          setEdges(loadedGraph.edges);
+        } catch (error) {
+          console.error('Error parsing JSON file:', error);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -83,6 +108,7 @@ function FlowChart() {
         width: "50vw",
         border: "1px solid black",
         marginLeft: "12.5vw",
+        marginTop: "5vh"
       }}>
         <ReactFlow
           nodes={nodes}
@@ -98,6 +124,7 @@ function FlowChart() {
         </ReactFlow>
       </div>
       <button type="button" className="btn btn-primary" onClick={() => handleSave(nodes, edges)}>Save</button>
+      <button type="button" className="btn btn-secondary" onClick={handleLoad}>Load</button>
     </>
   );
 }
