@@ -1,24 +1,47 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
- 
-function TextUpdaterNode({ data }) {
-    const onChange = useCallback((evt) => {
-        data.label = evt.target.value
-      }, []);
- 
+// import { Accordion } from 'react-bootstrap';
+
+const ReadPdfInput = ({ data }) => {
+  const onChange = useCallback((evt) => {
+    data.label = evt.target.value
+  }, []);
+
   return (
-    <>
+    <div className='flex flex-row justify-between p-1'>
+      <span className='mr1'> Regexp </span>
+      <input type="text nodrag" className='p-1 bg-white opacity-50 text-xs' onChange={onChange} />
+    </div>
+  );
+};
+
+
+
+function ReadPdf({ data }) {
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpansion = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+
+  return (
+    <div className='justify-right custom-node'>
       <Handle type="target" position={Position.Top} />
-      <div>
-        <label htmlFor="text">Regexp:</label>
-        <input id="text" name="text" onChange={onChange} className="nodrag" />
-      </div>
       <Handle type="source" position={Position.Bottom} id="a" />
-    </>
+      <span className='mr1'>Header node</span>
+      <span className="adjust-right" onClick={toggleExpansion}>
+        {isExpanded ? "-" : "+"}
+      </span>
+
+      {
+        isExpanded && <ReadPdfInput data={data} />
+      }
+    </div>
   );
 }
 
 export const nodeTypes = {
-    textUpdater: TextUpdaterNode
-  };
-  
+  ReadPdf: ReadPdf
+};

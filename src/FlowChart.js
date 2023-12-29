@@ -12,7 +12,10 @@ import saveAs from 'file-saver';
 import 'reactflow/dist/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const initialEdges = [{ id: '1-2', source: '1', target: '2' }];
+const initialEdges = [
+  { id: '1-2', source: '1', target: '2' },
+  { id: '1-3', source: '1', target: '3' }
+];
 const initialNodes = [
   {
     id: '1',
@@ -26,12 +29,12 @@ const initialNodes = [
     position: { x: 100, y: 100 },
     type: 'output',
   },
-  // {
-  //   id: '2',
-  //   data: { label: 'initial value' },
-  //   position: { x: 100, y: 100 },
-  //   type: 'textUpdater',
-  // },
+  {
+    id: '3',
+    data: { label: '' },
+    position: { x: 200, y: 200 },
+    type: 'ReadPdf',
+  },
 ];
 
 const saveAsJson = (toSave, fileName) => {
@@ -44,7 +47,7 @@ const showInNewTab = (toSave, fileName) => {
   const blob = new Blob([JSON.stringify(toSave, null, 2)], { type: 'application/json' });
 
   const objectUrl = URL.createObjectURL(blob);
-  const newTab = window.open(objectUrl, '_blank');
+  window.open(objectUrl, '_blank');
   URL.revokeObjectURL(objectUrl);
 };
 
@@ -54,7 +57,7 @@ const handleSave = (nodes, edges) => {
     nodes: nodes,
     edges: edges
   };
-  // saveAsJson(graphNodes, "graph.json")
+  saveAsJson(graphNodes, "graph.json")
   showInNewTab(graphNodes)
 };
 
@@ -64,12 +67,12 @@ function FlowChart() {
 
   const handleLoad = () => {
     const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = '.json';
-      fileInput.addEventListener('change', (event) => handleFileChange(event));
-      fileInput.click();
+    fileInput.type = 'file';
+    fileInput.accept = '.json';
+    fileInput.addEventListener('change', (event) => handleFileChange(event));
+    fileInput.click();
   };
-  
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -102,30 +105,30 @@ function FlowChart() {
   );
 
   return (
-    <>
-      <div style={{
-        height: "50vh",
-        width: "50vw",
-        border: "1px solid black",
-        marginLeft: "12.5vw",
-        marginTop: "5vh"
-      }}>
-        <ReactFlow
-          nodes={nodes}
-          onNodesChange={onNodesChange}
-          edges={edges}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          fitView
-        >
-          <Background />
-          <Controls />
-        </ReactFlow>
+    <div className='flex-container'>
+      <div className='sidebar'>
+        <h1> The Sidebar </h1>
       </div>
-      <button type="button" className="btn btn-primary" onClick={() => handleSave(nodes, edges)}>Save</button>
-      <button type="button" className="btn btn-secondary" onClick={handleLoad}>Load</button>
-    </>
+      <div className="main-column">
+        <h1 className="center"> Document Extractor </h1>
+        <div className='flowchart-container'>
+          <ReactFlow
+            nodes={nodes}
+            onNodesChange={onNodesChange}
+            edges={edges}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+            fitView
+          >
+            <Background />
+            <Controls />
+          </ReactFlow>
+        </div>
+        <button type="button" className="btn btn-primary adjust-left" onClick={() => handleSave(nodes, edges)}>Save</button>
+        <button type="button" className="btn btn-secondary adjust-right" onClick={handleLoad}>Load</button>
+      </div>
+    </div>
   );
 }
 
