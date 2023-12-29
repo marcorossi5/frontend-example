@@ -30,7 +30,7 @@ function ReadPdf({ data }) {
     <div className='justify-right custom-node'>
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} id="a" />
-      <span className='mr1'>Header node</span>
+      <span className='mr1'>Click &#128073;</span>
       <span className="adjust-right" onClick={toggleExpansion}>
         {isExpanded ? "-" : "+"}
       </span>
