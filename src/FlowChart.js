@@ -5,35 +5,38 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
+  ReactFlowProvider,
+  useReactFlow
 } from 'reactflow';
 import { nodeTypes } from "./Nodes";
 
 import saveAs from 'file-saver';
 import 'reactflow/dist/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SideBar from './SideBar';
 
 const initialEdges = [
-  { id: '1-2', source: '1', target: '2' },
-  { id: '1-3', source: '1', target: '3' }
+  { id: '0-1', source: '0', target: '1' },
+  { id: '0-2', source: '0', target: '2' }
 ];
 const initialNodes = [
   {
-    id: '1',
+    id: '0',
+    type: 'input',
     data: { label: 'Hello' },
     position: { x: 0, y: 0 },
-    type: 'input',
+  },
+  {
+    id: '1',
+    type: 'output',
+    data: { label: 'World' },
+    position: { x: 100, y: 100 },
   },
   {
     id: '2',
-    data: { label: 'World' },
-    position: { x: 100, y: 100 },
-    type: 'output',
-  },
-  {
-    id: '3',
-    data: { label: '' },
-    position: { x: 200, y: 200 },
     type: 'ReadPdf',
+    data: { label: 'ttt' },
+    position: { x: 200, y: 200 },
   },
 ];
 
@@ -61,7 +64,9 @@ const handleSave = (nodes, edges) => {
   showInNewTab(graphNodes)
 };
 
-function FlowChart() {
+function Flow() {
+  const reactFlowInstance = useReactFlow();
+
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
 
@@ -104,27 +109,52 @@ function FlowChart() {
     [],
   );
 
+  const addNewNode = useCallback((nodeType) => {
+    const id = reactFlowInstance.getNodes().length;
+    const newNode = {
+      id,
+      position: {
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+      },
+      data: {
+        label: `${nodeType}`,
+      },
+      type: `${nodeType}`,
+      width: 150,
+      height: 40
+    };
+    reactFlowInstance.addNodes(newNode);
+  }, []);
+
+  const getNodeCount = () => {
+    console.log(reactFlowInstance.getNodes())
+  };
+
   return (
     <div className='flex-container'>
-      <div className='sidebar'>
-        <h1> The Sidebar </h1>
-      </div>
+      <SideBar nodeTypes={nodeTypes} onSubmit={addNewNode} />
       <div className="main-column">
         <h1 className="center"> Document Extractor </h1>
         <div className='flowchart-container'>
           <ReactFlow
-            nodes={nodes}
+            defaultNodes={initialNodes}
+            defaultEdges={initialEdges}
             onNodesChange={onNodesChange}
-            edges={edges}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
+            deleteKeyCode={"Backspace" || "Delete"}
+            connectionLineStyle={{ stroke: "black" }}
             fitView
           >
             <Background />
             <Controls />
           </ReactFlow>
         </div>
+        <button onClick={() => getNodeCount()} className="btn btn-warning">
+          Check node
+        </button>
         <button type="button" className="btn btn-primary adjust-left" onClick={() => handleSave(nodes, edges)}>Save</button>
         <button type="button" className="btn btn-secondary adjust-right" onClick={handleLoad}>Load</button>
       </div>
@@ -132,4 +162,14 @@ function FlowChart() {
   );
 }
 
+
+
+function FlowChart() {
+  return (
+    <ReactFlowProvider>
+      <Flow/>
+    </ReactFlowProvider>
+  );
+}
+ 
 export default FlowChart;
