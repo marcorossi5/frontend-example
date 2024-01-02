@@ -28,7 +28,7 @@ function ReadPdf({ data }) {
   return (
     <div className='justify-right custom-node'>
       <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} id="a" />
+      <Handle type="source" position={Position.Bottom} />
       <span className='mr-1'>ReadPdf &#128073;</span>
       <span className="adjust-right" onClick={toggleExpansion}>
         {isExpanded ? "-" : "+"}
@@ -54,7 +54,7 @@ function NamedEntityRecognition({ data }) {
   return (
     <div className='justify-right custom-node'>
       <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} id="a" />
+      <Handle type="source" position={Position.Bottom} />
       <span className='mr-1'>NER &#128073;</span>
       <span className="adjust-right" onClick={toggleExpansion}>
         {isExpanded ? "-" : "+"}

@@ -1,10 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import ReactFlow, {
   Controls,
   Background,
-  applyNodeChanges,
-  applyEdgeChanges,
-  addEdge,
   ReactFlowProvider,
   useReactFlow
 } from 'reactflow';
@@ -17,7 +14,7 @@ import SideBar from './SideBar';
 
 const initialEdges = [
   { id: '0-1', source: '0', target: '1' },
-  { id: '0-2', source: '0', target: '2' }
+  { id: '1-2', source: '1', target: '2' }
 ];
 const initialNodes = [
   {
@@ -28,13 +25,13 @@ const initialNodes = [
   },
   {
     id: '1',
-    type: 'output',
+    type: 'default',
     data: { label: 'World' },
     position: { x: 100, y: 100 },
   },
   {
     id: '2',
-    type: 'ReadPdf',
+    type: 'default',
     data: { label: 'ttt' },
     position: { x: 200, y: 200 },
   },
@@ -55,20 +52,8 @@ const showInNewTab = (toSave, fileName) => {
 };
 
 
-const handleSave = (nodes, edges) => {
-  const graphNodes = {
-    nodes: nodes,
-    edges: edges
-  };
-  saveAsJson(graphNodes, "graph.json")
-  showInNewTab(graphNodes)
-};
-
 function Flow() {
   const reactFlowInstance = useReactFlow();
-
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
 
   const handleLoad = () => {
     const fileInput = document.createElement('input');
@@ -84,9 +69,9 @@ function Flow() {
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          const loadedGraph = JSON.parse(e.target.result);
-          setNodes(loadedGraph.nodes);
-          setEdges(loadedGraph.edges);
+          const { nodes, edges } = JSON.parse(e.target.result);
+          reactFlowInstance.setNodes(nodes);
+          reactFlowInstance.setEdges(edges);
         } catch (error) {
           console.error('Error parsing JSON file:', error);
         }
@@ -94,20 +79,6 @@ function Flow() {
       reader.readAsText(file);
     }
   };
-
-  const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [],
-  );
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [],
-  );
-
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [],
-  );
 
   const addNewNode = useCallback((nodeType) => {
     const id = reactFlowInstance.getNodes().length;
@@ -127,8 +98,20 @@ function Flow() {
     reactFlowInstance.addNodes(newNode);
   }, []);
 
-  const getNodeCount = () => {
-    console.log(reactFlowInstance.getNodes())
+  const handleSave = () => {
+    const graphNodes = {
+      nodes: reactFlowInstance.getNodes(),
+      edges: reactFlowInstance.getEdges()
+    };
+    saveAsJson(graphNodes, "graph.json")
+    showInNewTab(graphNodes)
+  };
+
+  const edgeOptions = {
+    animated: true,
+    style: {
+      stroke: 'green',
+    },
   };
 
   return (
@@ -140,22 +123,15 @@ function Flow() {
           <ReactFlow
             defaultNodes={initialNodes}
             defaultEdges={initialEdges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
+            defaultEdgeOptions={edgeOptions}
             nodeTypes={nodeTypes}
-            deleteKeyCode={"Backspace" || "Delete"}
-            connectionLineStyle={{ stroke: "black" }}
             fitView
           >
             <Background />
             <Controls />
           </ReactFlow>
         </div>
-        <button onClick={() => getNodeCount()} className="btn btn-warning">
-          Check node
-        </button>
-        <button type="button" className="btn btn-primary adjust-left" onClick={() => handleSave(nodes, edges)}>Save</button>
+        <button type="button" className="btn btn-primary adjust-left" onClick={handleSave}>Save</button>
         <button type="button" className="btn btn-secondary adjust-right" onClick={handleLoad}>Load</button>
       </div>
     </div>
@@ -167,9 +143,9 @@ function Flow() {
 function FlowChart() {
   return (
     <ReactFlowProvider>
-      <Flow/>
+      <Flow />
     </ReactFlowProvider>
   );
 }
- 
+
 export default FlowChart;
