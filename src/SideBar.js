@@ -16,7 +16,7 @@ function SideBar({ nodeTypes, onSubmit }) {
   };
 
   return (
-    <div className='sidebar'>
+    <div className='sidebar ps-3'>
       <h3>Add nodes</h3>
       <Form onSubmit={handleFormSubmit}>
         <Form.Group controlId="selectedNode">
