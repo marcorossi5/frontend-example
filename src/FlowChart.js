@@ -15,7 +15,6 @@ import SideBar from './SideBar';
 
 const initialEdges = [
   { id: '0-1', source: '0', target: '1' },
-  { id: '1-2', source: '1', target: '2' }
 ];
 const initialNodes = [
   {
@@ -29,12 +28,6 @@ const initialNodes = [
     type: 'default',
     data: { label: 'World' },
     position: { x: 100, y: 100 },
-  },
-  {
-    id: '2',
-    type: 'default',
-    data: { label: 'ttt' },
-    position: { x: 200, y: 200 },
   },
 ];
 
