@@ -81,7 +81,7 @@ function Flow() {
   };
 
   const addNewNode = useCallback((nodeType) => {
-    const id = reactFlowInstance.getNodes().length;
+    const id = `${reactFlowInstance.getNodes().length}`;
     const newNode = {
       id,
       position: {
