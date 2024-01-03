@@ -1,6 +1,7 @@
 .custom-node {
   background-color: "#9ca8b3";
-  /* width: 150px; */
+  width: 150px;
+  height: 40px;
   font-size: 12px;
   padding: 10px;
   border-radius: 3px;

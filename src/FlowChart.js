@@ -93,8 +93,6 @@ function Flow() {
         label: `${nodeType}`,
       },
       type: `${nodeType}`,
-      width: 150,
-      height: 40
     };
     reactFlowInstance.addNodes(newNode);
   }, []);
@@ -122,7 +120,7 @@ function Flow() {
     <div className='flex-container'>
       <SideBar nodeTypes={nodeTypes} onSubmit={addNewNode} />
       <div className="main-column">
-        <h1 className="center"> Document Extractor </h1>
+        <h1 className="text-center"> Document Extractor </h1>
         <div className='flowchart-container'>
           <ReactFlow
             defaultNodes={initialNodes}
@@ -135,8 +133,8 @@ function Flow() {
             <Controls />
           </ReactFlow>
         </div>
-        <button type="button" className="btn btn-primary adjust-left" onClick={handleSave}>Save</button>
-        <button type="button" className="btn btn-secondary adjust-right" onClick={handleLoad}>Load</button>
+        <button type="button" className="btn btn-primary float-start" onClick={handleSave}>Save</button>
+        <button type="button" className="btn btn-secondary float-end" onClick={handleLoad}>Load</button>
       </div>
     </div>
   );

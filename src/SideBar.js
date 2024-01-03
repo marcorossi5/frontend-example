@@ -36,7 +36,7 @@ function SideBar({ nodeTypes, onSubmit }) {
             )
           }
         </Form.Group>
-        <Button variant="primary" type="submit" className="btn btn-primary">
+        <Button variant="primary" type="submit" className="btn btn-primary mt-2">
           Submit
         </Button>
       </Form>
