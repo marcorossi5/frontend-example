@@ -2,8 +2,9 @@ import { useCallback } from 'react';
 import ReactFlow, {
   Controls,
   Background,
+  MarkerType,
+  useReactFlow,
   ReactFlowProvider,
-  useReactFlow
 } from 'reactflow';
 import { nodeTypes } from "./Nodes";
 
@@ -110,7 +111,10 @@ function Flow() {
   const edgeOptions = {
     animated: true,
     style: {
-      stroke: 'green',
+    },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
     },
   };
 
